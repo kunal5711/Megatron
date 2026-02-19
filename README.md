@@ -4,6 +4,15 @@ An application that maps source CSV columns to a target schema using heuristics,
 
 ---
 
+## 🎬 Demo & documentation
+
+| Link | Description |
+|------|-------------|
+| [Demo video](YOUR_DEMO_VIDEO_URL) | Watch a walkthrough of the application. |
+| [Additional documentation](YOUR_DOCS_URL) | Architecture, design notes, or other materials. |
+
+---
+
 ## ✨ Features
 
 - **CSV upload & profiling** — Ingest CSV files and infer column types, null ratios, and uniqueness
@@ -40,7 +49,7 @@ An application that maps source CSV columns to a target schema using heuristics,
 ### 1. Clone and enter the project
 
 ```bash
-cd "Mapper"
+cd "Megatron"
 ```
 
 ### 2. Create a virtual environment (recommended)
@@ -153,7 +162,7 @@ Use the **Mapping** page: enter a tenant name, upload a CSV, and click **Generat
 ## 📁 Project structure
 
 ```
-Phase 3/
+Megatron/
 ├── backend/
 │   ├── main.py           # FastAPI app, routes
 │   ├── config.py         # Env vars, OpenRouter & MongoDB settings
