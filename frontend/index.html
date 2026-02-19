@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapper</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+  <!-- Sidebar Navigation -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon"><i class="fas fa-project-diagram"></i></div>
+      <span class="brand-text">Mapper</span>
+    </div>
+    <ul class="nav-list">
+      <li class="nav-item active" data-page="mapping">
+        <i class="fas fa-exchange-alt"></i><span>Mapping</span>
+      </li>
+      <li class="nav-item" data-page="memory">
+        <i class="fas fa-brain"></i><span>Memory</span>
+      </li>
+      <li class="nav-item" data-page="tasks">
+        <i class="fas fa-tasks"></i><span>Saved Tasks</span>
+      </li>
+      <li class="nav-item" data-page="training">
+        <i class="fas fa-graduation-cap"></i><span>Training</span>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- ============================================== -->
+    <!-- PAGE: Mapping Review -->
+    <!-- ============================================== -->
+    <div class="page active" id="page-mapping">
+      <div class="page-header">
+        <h1>Mapping</h1>
+        <p class="subtitle">Upload a CSV and generate schema mappings</p>
+      </div>
+
+      <!-- Upload Card -->
+      <div class="card">
+        <div class="card-row">
+          <div class="form-group" style="flex:1">
+            <label for="tenantName">Tenant</label>
+            <input type="text" id="tenantName" placeholder="e.g. acme_corp" required>
+          </div>
+          <div class="form-group" style="flex:1">
+            <label for="fileInput">CSV File</label>
+            <input type="file" id="fileInput" accept=".csv">
+          </div>
+          <div class="form-group" style="align-self:flex-end">
+            <button id="uploadBtn" class="btn btn-primary"><i class="fas fa-bolt"></i> Generate</button>
+          </div>
+        </div>
+        <div id="status" class="toast" style="display:none"></div>
+      </div>
+
+      <!-- Review Section -->
+      <div id="reviewSection" style="display:none">
+        <div class="card">
+          <div class="card-header-row">
+            <h2>Review Mappings</h2>
+            <div class="header-actions">
+              <button id="saveTaskBtn" class="btn btn-outline"><i class="fas fa-save"></i> Save Task</button>
+              <button id="finalApproveBtn" class="btn btn-success"><i class="fas fa-check-circle"></i> Approve &amp; Download</button>
+              <button id="cancelReviewBtn" class="btn btn-ghost"><i class="fas fa-times"></i> Cancel</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table" id="reviewTable">
+              <thead>
+                <tr>
+                  <th>Source Column</th>
+                  <th>Target Field</th>
+                  <th>Confidence</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="reviewBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- PAGE: Memory Management -->
+    <!-- ============================================== -->
+    <div class="page" id="page-memory">
+      <div class="page-header">
+        <h1>Memory</h1>
+        <p class="subtitle">Manage mapping memory records</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header-row">
+          <div class="toggle-group">
+            <button class="toggle-btn active" data-status="ACTIVE" id="memFilterActive">Active</button>
+            <button class="toggle-btn" data-status="DISABLED" id="memFilterDisabled">Disabled</button>
+          </div>
+          <div class="header-actions">
+            <button id="addMemoryBtn" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> New Record</button>
+            <button id="commitMemoryBtn" class="btn btn-success btn-sm" style="display:none">
+              <i class="fas fa-database"></i> Final Commit <span id="pendingBadge" class="badge">0</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Pending changes banner -->
+        <div id="pendingBanner" class="pending-banner" style="display:none">
+          <i class="fas fa-info-circle"></i>
+          <span id="pendingText">0 pending changes</span>
+          <button id="clearPendingBtn" class="btn btn-ghost btn-xs">Clear</button>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table" id="memoryTable">
+            <thead>
+              <tr>
+                <th>Source Column</th>
+                <th>Target Field</th>
+                <th>Tenant</th>
+                <th>Category</th>
+                <th>Source</th>
+                <th>Uses</th>
+                <th>Created</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="memoryBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Add / Edit Modal -->
+      <div class="modal-overlay" id="memoryModal" style="display:none">
+        <div class="modal">
+          <div class="modal-header">
+            <h3 id="memoryModalTitle">New Memory Record</h3>
+            <button class="btn btn-ghost btn-icon" id="closeMemoryModal"><i class="fas fa-times"></i></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Source Column</label>
+              <input type="text" id="modalSourceCol" placeholder="source_column_name">
+            </div>
+            <div class="form-group">
+              <label>Target Field</label>
+              <select id="modalTargetField"><option value="">Select target...</option></select>
+            </div>
+            <div class="form-group">
+              <label>Tenant</label>
+              <input type="text" id="modalTenant" placeholder="tenant_name">
+            </div>
+            <div class="form-group">
+              <label>Category</label>
+              <input type="text" id="modalCategory" placeholder="category">
+            </div>
+            <!-- hidden fields for edit mode -->
+            <input type="hidden" id="modalMemoryId">
+            <input type="hidden" id="modalMode" value="CREATE">
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-ghost" id="cancelMemoryModal">Cancel</button>
+            <button class="btn btn-primary" id="saveMemoryModal">Add to Queue</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- PAGE: Saved Tasks -->
+    <!-- ============================================== -->
+    <div class="page" id="page-tasks">
+      <div class="page-header">
+        <h1>Saved Tasks</h1>
+        <p class="subtitle">Resume or manage saved mapping reviews</p>
+      </div>
+
+      <div class="card">
+        <div class="table-wrap">
+          <table class="data-table" id="tasksTable">
+            <thead>
+              <tr>
+                <th>Task Name</th>
+                <th>Tenant</th>
+                <th>Mappings</th>
+                <th>Status</th>
+                <th>Updated</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tasksBody"></tbody>
+          </table>
+        </div>
+        <div id="noTasks" class="empty-state" style="display:none">
+          <i class="fas fa-inbox"></i>
+          <p>No saved tasks</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- PAGE: Training -->
+    <!-- ============================================== -->
+    <div class="page" id="page-training">
+      <div class="page-header">
+        <h1>Training</h1>
+        <p class="subtitle">Ingest pre-mapped data to improve accuracy</p>
+      </div>
+
+      <div class="card">
+        <form id="trainingForm">
+          <div class="card-row">
+            <div class="form-group" style="flex:1">
+              <label for="trainingTenant">Tenant</label>
+              <input type="text" id="trainingTenant" required placeholder="tenant_name">
+            </div>
+            <div class="form-group" style="flex:1">
+              <label for="trainingFile">Excel / CSV File</label>
+              <input type="file" id="trainingFile" accept=".xlsx,.xls,.csv" required>
+            </div>
+            <div class="form-group" style="align-self:flex-end">
+              <button type="submit" class="btn btn-primary"><i class="fas fa-upload"></i> Ingest</button>
+            </div>
+          </div>
+        </form>
+        <div id="trainingResults"></div>
+      </div>
+    </div>
+
+    <!-- Save Task Modal -->
+    <div class="modal-overlay" id="saveTaskModal" style="display:none">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>Save Task</h3>
+          <button class="btn btn-ghost btn-icon" id="closeSaveTaskModal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Task Name</label>
+            <input type="text" id="saveTaskName" placeholder="My mapping review">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-ghost" id="cancelSaveTask">Cancel</button>
+          <button class="btn btn-primary" id="confirmSaveTask"><i class="fas fa-save"></i> Save</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
