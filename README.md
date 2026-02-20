@@ -8,15 +8,15 @@ An application that maps source CSV columns to a target schema using heuristics,
 
 | Link | Description |
 |------|-------------|
-| [Demo video](https://drive.google.com/file/d/1D0iKdvP8UimkvgY3RdWcgkCjti0eQUVJ/view?usp=sharing) | Watch a walkthrough of the application |
-| [Additional documentation](SYSTEM_ARCHITECTURE.md) | Architecture and design |
-| [Presentation](https://drive.google.com/file/d/1u1it-fIYC8EDym4BAXfIw9eMJsC9Xm74/view?usp=sharing) | Overview of the Mapper |
+| [Demo video](https://drive.google.com/file/d/1D0iKdvP8UimkvgY3RdWcgkCjti0eQUVJ/view?usp=sharing) | End-to-end application walkthrough / usage demo |
+| [Additional documentation](SYSTEM_ARCHITECTURE.md) | System architecture, components, and design reference |
+| [Presentation pdf](https://drive.google.com/file/d/1z7wV4HKLAJ8o026sGwMZlw82Mdn1qzLv/view?usp=sharing) | High-level technical overview and Mapper product summary |
 
 ---
 
 ## Features
 
-- **CSV upload & profiling** — Ingest CSV files and infer column types, null ratios, and uniqueness
+- **CSV upload & profiling** — Ingest CSV files and infer column types, null ratios, uniqueness, and other metrices.
 - **Multi-step mapping pipeline** — Heuristics → memory (FAISS) → target schema similarity → **LLM disambiguation** (OpenRouter)
 - **Review workflow** — Approve, reject, or correct mappings; save tasks and resume later
 - **Memory & training** — Historical mappings stored in MongoDB; train from Excel/CSV for tenant-specific patterns
