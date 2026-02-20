@@ -4,16 +4,17 @@ An application that maps source CSV columns to a target schema using heuristics,
 
 ---
 
-## 🎬 Demo & documentation
+## Demo & documentation
 
 | Link | Description |
 |------|-------------|
-| [Demo video](YOUR_DEMO_VIDEO_URL) | Watch a walkthrough of the application. |
-| [Additional documentation](YOUR_DOCS_URL) | Architecture, design notes, or other materials. |
+| [Demo video](https://drive.google.com/file/d/1D0iKdvP8UimkvgY3RdWcgkCjti0eQUVJ/view?usp=sharing) | Watch a walkthrough of the application |
+| [Additional documentation](SYSTEM_ARCHITECTURE.md) | Architecture and design |
+| [Presentation](https://drive.google.com/file/d/1u1it-fIYC8EDym4BAXfIw9eMJsC9Xm74/view?usp=sharing) | Overview of the Mapper |
 
 ---
 
-## ✨ Features
+## Features
 
 - **CSV upload & profiling** — Ingest CSV files and infer column types, null ratios, and uniqueness
 - **Multi-step mapping pipeline** — Heuristics → memory (FAISS) → target schema similarity → **LLM disambiguation** (OpenRouter)
@@ -49,7 +50,8 @@ An application that maps source CSV columns to a target schema using heuristics,
 ### 1. Clone and enter the project
 
 ```bash
-cd "Megatron"
+git clone https://github.com/kunal5711/Megatron.git
+cd Megatron
 ```
 
 ### 2. Create a virtual environment (recommended)
@@ -83,13 +85,17 @@ pip install -r requirements.txt
 
 ### 4. Environment variables
 
-Copy the example env file and edit it:
+Copy the example env file and add your keys:
 
 ```bash
-copy .env.example .env
+# macOS / Linux
+cp env.example .env
+
+# Windows (PowerShell)
+Copy-Item env.example .env
 ```
 
-Then open `.env` and set at least:
+Edit `.env` and set at least:
 
 - `OPENROUTER_API_KEY` — **Required for LLM-based mapping.** See [Getting an OpenRouter API key](#-getting-an-openrouter-api-key) below.
 - `MONGO_URI` — If MongoDB is not on `localhost:27017`.
@@ -115,7 +121,7 @@ The app uses [OpenRouter](https://openrouter.ai) to call LLMs (e.g. GPT-4o-mini,
 
 ### Step 3: Add the key to your app
 
-In your project `.env`:
+In your project `.env` (create from `env.example` if needed):
 
 ```env
 OPENROUTER_API_KEY=sk-or-v1-your-key-here
@@ -151,9 +157,11 @@ uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
 - API: **http://localhost:8000**
 - Docs: **http://localhost:8000/docs**
 
+*(First run may take a few minutes while Sentence Transformers and FAISS are loading.)*
+
 ### 3. Open the frontend
 
-- Open `frontend/index.html` in a browser **http://localhost:5500**.
+- Open `frontend/index.html` in a browser **http://127.0.0.1:5500/frontend/index.html**.
 
 Use the **Mapping** page: enter a tenant name, upload a CSV, and click **Generate** to get mappings. Use **Memory**, **Saved Tasks**, and **Training** as needed.
 
@@ -182,7 +190,7 @@ Megatron/
 │   └── app.js
 ├── target_schema.json    # Target field definitions (large)
 ├── requirements.txt
-├── .env.example
+├── env.example           # Copy to .env and add your keys
 └── README.md
 ```
 
